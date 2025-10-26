@@ -25,6 +25,7 @@ SELECT DISTINCT
   t2.Cuenta,
   CAST(t2.Fecha_desde AS DATE) AS Fecha_desde,
   CAST(t2.Fecha_hasta AS DATE) AS Fecha_hasta
-FROM `arcane-tome-333902.prueba_tec.Tabla_1` AS t1
+FROM `arcane-tome-333902.prueba_tec.Apex_logins` AS t1
 INNER JOIN `arcane-tome-333902.prueba_tec.Nómina` AS t2
+
   ON t1.Username = t2.Correo_electronico;
