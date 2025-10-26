@@ -1,0 +1,28 @@
+Responder las siguientes preguntas de forma escrita:
+Mencionar al menos 3 posibles causas técnicas por las que el pipeline de ingesta pudo haber introducido duplicados.
+¿Qué procedimiento usarías inmediatamente para limpiar los duplicados de la tabla sin perder datos legítimos?
+¿Qué solución plantearías a largo plazo para darle solución a este problema y evitar futuras duplicaciones?
+¿Qué le agregarías al pipeline en general para contar con las notificaciones correspondientes en caso que este tipo de problema vuelva a presentarse?
+
+
+Mencionar al menos 3 posibles causas técnicas por las que el pipeline de ingesta pudo haber introducido duplicados.
+1-Error en el archivo de datos: 
+                - Nuevos campos
+                - Cambio en el formato de la key principal
+                - Espacios
+2-Duplicado del archivo, el archivo es único y se reemplaza cada día? Se suma un nuevo archivo por día?
+3-Se utiliza  "insert into" o "append" en el Load.
+4-Si no es idempotente y se corre varias veces, los resultados se van duplicando.
+      
+¿Qué procedimiento usarías inmediatamente para limpiar los duplicados de la tabla sin perder datos legítimos?
+-Validar la carga en el bucket
+-Utilizaría "df.drop_duplicates()" en Python o ROW_NUMBER() en bigquery sobre el campo que necesite único, por ejemplo "fecha_ingesta" ordenandolo descendientemente y extrayendo el primer resultado de cada "username" por día.
+-Utilizar DELETE + INSERT o WRITE_TRUNCATE para asegurar que solo corre un único archivo.
+
+¿Qué solución plantearías a largo plazo para darle solución a este problema y evitar futuras duplicaciones?
+-Utilizar WRITE_TRUNCATE si es un único archivo que se actualiza diariamente o INSERT_OVERWRITE si los archivosson varios que se van sumando por día.
+
+¿Qué le agregarías al pipeline en general para contar con las notificaciones correspondientes en caso que este tipo de problema vuelva a presentarse?
+Le agregaría alguna función que me de alerta si se está reintentado realizar una carga de datos, alguna función que me indique si se cargó un volumen mayor a lo habitual lo que podría representar que se duplicaron las bases o u script que valide si existen campos duplicados antes de la carga.
+
+
